@@ -22,7 +22,7 @@ capabilities.
 - [Pinned external resources](#pinned-external-resources)
 - [Reading the source code](#reading-the-source-code)
 - [Reproducing the ELF binary](#reproducing-the-elf-binary)
-- [Reproducing the Docker image](#reproducing-the-oci-image)
+- [Reproducing the Docker image](#reproducing-the-docker-image)
 - [Reproducing the Arch Linux package](#reproducing-the-arch-linux-package)
 - [Notes on security patches](#notes-on-security-patches)
 - [How is this related to Reproducible Builds](#how-is-this-related-to-reproducible-builds)
