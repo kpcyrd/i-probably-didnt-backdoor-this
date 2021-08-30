@@ -122,7 +122,7 @@ this checksum:
 
 ```sh
 $ b2sum target/x86_64-unknown-linux-musl/release/asdf
-35578eb5fbd13fe27bbc9f799488de2a196acfdb00886d7a5b88e13e0a73e8197fded1afdc9eb6b886864cd39bdeaa17910351da971710056630b1cb3a31a8cd  target/x86_64-unknown-linux-musl/release/asdf
+abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  target/x86_64-unknown-linux-musl/release/asdf
 ```
 
 If you get the same checksum you've successfully reproduced the binary. If
