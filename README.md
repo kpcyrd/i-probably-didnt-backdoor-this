@@ -125,6 +125,15 @@ $ b2sum target/x86_64-unknown-linux-musl/release/asdf
 abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  target/x86_64-unknown-linux-musl/release/asdf
 ```
 
+Downloading and hashing the pre-compiled binary from the [releases
+page](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases) should
+give you an identical hash:
+
+```sh
+$ curl -LsS 'https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases/download/v0.1.0/asdf' | b2sum -
+abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  -
+```
+
 If you get the same checksum you've successfully reproduced the binary. If
 there's no difference between the pre-compiled binary and the one you built
 yourself this means the pre-compiled binary is just as trustworthy as the one
@@ -162,12 +171,14 @@ Successfully tagged localhost/asdf:latest
 950be5f14efbb7f9cccd40e71560a9e150de4717e47af8933b35d6c89c8f9e83
 ```
 
-The last line is the hash of our image.  We're using buildah to build the image
-because there's no way to set the layer timestamp with docker (causing the hash
-to vary). Unfortunately buildah records it's version, this image has been built
-with `1.22.3`.
+The last line is the hash of the image we just built. We're using buildah to
+build the image because there's no way to set the layer timestamp with docker
+(causing the hash to vary). Unfortunately buildah records it's version, this
+image has been built with `1.22.3`.
 
-Next pull the image from the registry:
+The pre-compiled images can be found on the [container
+registry](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/pkgs/container/i-probably-didnt-backdoor-this)
+(also linked in the side-bar on the right). Pull the image with this command:
 
 ```sh
 $ docker pull ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
@@ -179,8 +190,8 @@ Status: Downloaded newer image for ghcr.io/kpcyrd/i-probably-didnt-backdoor-this
 ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 ```
 
-You'll noticed the hash doesn't seem to match at first, but the image id is
-indeed the same:
+You'll noticed the hash doesn't seem to match at first, but if everything
+worked the image id is indeed the same:
 
 ```sh
 $ docker images --no-trunc ghcr.io/kpcyrd/i-probably-didnt-backdoor-this
