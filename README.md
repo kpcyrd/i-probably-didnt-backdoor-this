@@ -248,6 +248,11 @@ just like you did when following the instructions here!
 
 - [Verifying a Tails image for reproducibility](https://tails.boum.org/contribute/build/reproducible/)
 - [Reproducing Monero Binaries](https://github.com/monero-project/monero/blob/master/contrib/gitian/README.md)
+- [i-probably-didnt-backdoor-this](https://github.com/bureado/i-probably-didnt-backdoor-this)
+  fork by @bureado using unprivileged build containers with podman
+- [A similar guide using NixOS and
+  Bazel](https://github.com/mlieberman85/reproducible-examples) by
+  @mlieberman85
 
 ## Acknowledgments
 
