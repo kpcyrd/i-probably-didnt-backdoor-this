@@ -1,5 +1,5 @@
 pkgname=i-probably-didnt-backdoor-this
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 arch=('x86_64')
 makedepends=('cargo')

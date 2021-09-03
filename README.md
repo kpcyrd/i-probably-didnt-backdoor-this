@@ -122,7 +122,7 @@ this checksum:
 
 ```sh
 $ b2sum target/x86_64-unknown-linux-musl/release/asdf
-abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  target/x86_64-unknown-linux-musl/release/asdf
+cd112870cdf12052e5604e7559e45f95cac4e52a45e91c9d9285a22a82c6392e95fbf0dc5f784837e7769a3ce14c898c866a85e4d60b051d3416875e301e28aa  target/x86_64-unknown-linux-musl/release/asdf
 ```
 
 Downloading and hashing the pre-compiled binary from the [releases
@@ -130,8 +130,8 @@ page](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases) should
 give you an identical hash:
 
 ```sh
-$ curl -LsS 'https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases/download/v0.1.0/asdf' | b2sum -
-abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  -
+$ curl -LsS 'https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases/download/v0.1.1/asdf' | b2sum -
+cd112870cdf12052e5604e7559e45f95cac4e52a45e91c9d9285a22a82c6392e95fbf0dc5f784837e7769a3ce14c898c866a85e4d60b051d3416875e301e28aa  -
 ```
 
 If you get the same checksum you've successfully reproduced the binary. If
@@ -162,13 +162,13 @@ sudo buildah bud --timestamp 0 --tag asdf
 [2/2] COMMIT asdf
 Getting image source signatures
 Copying blob bc276c40b172 skipped: already exists
-Copying blob 358fb8c18c87 [--------------------------------------] 0.0b / 0.0b
-Copying config 950be5f14e done
+Copying blob 7d377d49a080 done
+Copying config f0b71b1591 done
 Writing manifest to image destination
 Storing signatures
---> 950be5f14ef
+--> f0b71b1591c
 Successfully tagged localhost/asdf:latest
-950be5f14efbb7f9cccd40e71560a9e150de4717e47af8933b35d6c89c8f9e83
+f0b71b1591cf50cf3609494187083741c1021fd99f6168ab8283c4390954cef1
 ```
 
 The last line is the hash of the image we just built. We're using buildah to
@@ -183,9 +183,9 @@ registry](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/pkgs/containe
 ```sh
 $ docker pull ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 latest: Pulling from kpcyrd/i-probably-didnt-backdoor-this
-50341f5fa632: Pull complete
-728be0271f95: Pull complete
-Digest: sha256:fb3bf3c27010d68bdbfe66d0953b447db7dc097717df7d86e285a501e6c992da
+50341f5fa632: Already exists
+163594b80890: Pull complete
+Digest: sha256:11cc7ec2b907a325fa3565039d990a466a7d83a06aa7dffdebba38d495d1571d
 Status: Downloaded newer image for ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 ```
@@ -196,7 +196,7 @@ worked the image id is indeed the same:
 ```sh
 $ docker images --no-trunc ghcr.io/kpcyrd/i-probably-didnt-backdoor-this
 REPOSITORY                                      TAG       IMAGE ID                                                                  CREATED        SIZE
-ghcr.io/kpcyrd/i-probably-didnt-backdoor-this   latest    sha256:950be5f14efbb7f9cccd40e71560a9e150de4717e47af8933b35d6c89c8f9e83   51 years ago   9.38MB
+ghcr.io/kpcyrd/i-probably-didnt-backdoor-this   latest    sha256:f0b71b1591cf50cf3609494187083741c1021fd99f6168ab8283c4390954cef1   51 years ago   9.38MB
 ```
 
 ### Reproducing the Arch Linux package
@@ -253,6 +253,7 @@ just like you did when following the instructions here!
 
 This project was funded by Google, The Linux Foundation, and people like you
 and me through [GitHub sponsors](https://github.com/sponsors/kpcyrd).
+
 ♥️♥️♥️
 
 ## License
