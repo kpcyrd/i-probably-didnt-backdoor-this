@@ -122,7 +122,16 @@ this checksum:
 
 ```sh
 $ b2sum target/x86_64-unknown-linux-musl/release/asdf
-35578eb5fbd13fe27bbc9f799488de2a196acfdb00886d7a5b88e13e0a73e8197fded1afdc9eb6b886864cd39bdeaa17910351da971710056630b1cb3a31a8cd  target/x86_64-unknown-linux-musl/release/asdf
+abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  target/x86_64-unknown-linux-musl/release/asdf
+```
+
+Downloading and hashing the pre-compiled binary from the [releases
+page](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases) should
+give you an identical hash:
+
+```sh
+$ curl -LsS 'https://github.com/kpcyrd/i-probably-didnt-backdoor-this/releases/download/v0.1.0/asdf' | b2sum -
+abdac109cfe060fdf59e7196b11b39be623da148cb03fe47973edab5f28a708ab2bfe02a1785c0a907d0cb3d1cb4d7baf66d155b317af9b0452fb9cb1de895a9  -
 ```
 
 If you get the same checksum you've successfully reproduced the binary. If
@@ -133,54 +142,61 @@ you built yourself.
 ### Reproducing the Docker image
 
 There's a Dockerfile in the repository that always produces the same
-bit-for-bit identical image if we provide the same binary (and use the right
-command). It does so by selecting one specific official alpine image by its
-sha256 hash, then `COPY`s the binary we've built in the previous section.
+bit-for-bit identical image. It's a multi-stage build, so it builds the binary
+in one temporary image and then creates the real image with just `FROM`, `COPY`
+and `ENTRYPOINT`. The build environment is virtually identical to what we're
+using in the previous section, then we're copying it over into an Alpine image
+that's pinned by its sha256 hash.
 
 ```sh
-$ b2sum target/x86_64-unknown-linux-musl/release/asdf
-35578eb5fbd13fe27bbc9f799488de2a196acfdb00886d7a5b88e13e0a73e8197fded1afdc9eb6b886864cd39bdeaa17910351da971710056630b1cb3a31a8cd  target/x86_64-unknown-linux-musl/release/asdf
 $ make docker
 sudo buildah bud --timestamp 0 --tag asdf
-STEP 1/3: FROM docker.io/alpine@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae
-STEP 2/3: COPY target/x86_64-unknown-linux-musl/release/asdf /asdf
-STEP 3/3: ENTRYPOINT ["/asdf"]
-COMMIT asdf
+[1/2] STEP 1/4: FROM docker.io/rust@sha256:8463cc29a3187a10fc8bf5200619aadf78091b997b0c3941345332a931c40a64
+[1/2] STEP 2/4: WORKDIR /app
+[1/2] STEP 3/4: COPY . .
+[1/2] STEP 4/4: RUN cargo build --release --locked --target=x86_64-unknown-linux-musl
+    Finished release [optimized] target(s) in 0.02s
+[2/2] STEP 1/3: FROM docker.io/alpine@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae
+[2/2] STEP 2/3: COPY --from=0 /app/target/x86_64-unknown-linux-musl/release/asdf /asdf
+[2/2] STEP 3/3: ENTRYPOINT ["/asdf"]
+[2/2] COMMIT asdf
 Getting image source signatures
 Copying blob bc276c40b172 skipped: already exists
-Copying blob 0ab66dfcdb16 done
-Copying config 1816fbf1a0 done
+Copying blob 358fb8c18c87 [--------------------------------------] 0.0b / 0.0b
+Copying config 950be5f14e done
 Writing manifest to image destination
 Storing signatures
---> 1816fbf1a0d
+--> 950be5f14ef
 Successfully tagged localhost/asdf:latest
-1816fbf1a0d2b49dda1eecc604419e5a8cb72df7924a7d2a3ebded128c9a1f66
+950be5f14efbb7f9cccd40e71560a9e150de4717e47af8933b35d6c89c8f9e83
 ```
 
-The last line is the hash of our image.  We're using buildah to build the image
-because there's no way to set the layer timestamp with docker (causing the hash
-to vary). Unfortunately buildah records it's version, this image has been built
-with `1.22.0`.
+The last line is the hash of the image we just built. We're using buildah to
+build the image because there's no way to set the layer timestamp with docker
+(causing the hash to vary). Unfortunately buildah records it's version, this
+image has been built with `1.22.3`.
 
-Next pull the image from the registry:
+The pre-compiled images can be found on the [container
+registry](https://github.com/kpcyrd/i-probably-didnt-backdoor-this/pkgs/container/i-probably-didnt-backdoor-this)
+(also linked in the side-bar on the right). Pull the image with this command:
 
 ```sh
 $ docker pull ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 latest: Pulling from kpcyrd/i-probably-didnt-backdoor-this
-06127b9e1ec2: Pull complete
-7c4fdf312986: Pull complete
-Digest: sha256:7914eb02bce9944273a753e83cd55063ddbfd1aaf76fc023175188485d968fd3
+50341f5fa632: Pull complete
+728be0271f95: Pull complete
+Digest: sha256:fb3bf3c27010d68bdbfe66d0953b447db7dc097717df7d86e285a501e6c992da
 Status: Downloaded newer image for ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 ghcr.io/kpcyrd/i-probably-didnt-backdoor-this:latest
 ```
 
-You'll noticed the hash doesn't seem to match at first, but the image id is
-indeed the same:
+You'll noticed the hash doesn't seem to match at first, but if everything
+worked the image id is indeed the same:
 
-```
+```sh
 $ docker images --no-trunc ghcr.io/kpcyrd/i-probably-didnt-backdoor-this
 REPOSITORY                                      TAG       IMAGE ID                                                                  CREATED        SIZE
-ghcr.io/kpcyrd/i-probably-didnt-backdoor-this   latest    sha256:1816fbf1a0d2b49dda1eecc604419e5a8cb72df7924a7d2a3ebded128c9a1f66   51 years ago   9.38MB
+ghcr.io/kpcyrd/i-probably-didnt-backdoor-this   latest    sha256:950be5f14efbb7f9cccd40e71560a9e150de4717e47af8933b35d6c89c8f9e83   51 years ago   9.38MB
 ```
 
 ### Reproducing the Arch Linux package
@@ -209,7 +225,7 @@ The following places need to be updated occasionally, causing the artifact
 hashes to change.
 
 - Dependencies in Cargo.toml/Cargo.lock (if any, cargo update)
-- `FROM` line in Dockerfile (docker pull alpine:latest)
+- `FROM` lines in Dockerfile (docker pull rust:alpine, docker pull alpine:latest)
 - The build image in the Makefile (docker pull rust:alpine)
 
 ### How is this related to Reproducible Builds
