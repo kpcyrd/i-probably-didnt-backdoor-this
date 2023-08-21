@@ -31,7 +31,7 @@ capabilities.
 ### Preparing retroactive reviews
 
 Since "reading the source code" requires advanced domain knowledge, this
-section describes a pen-and-paper aproach that can be used to cryptographically
+section describes a pen-and-paper approach that can be used to cryptographically
 ensure you can retro-actively review what you executed, even if you didn't
 review before you executed it. Pen-and-paper should be taken literally here to
 ensure this can't be modified by software. If done correctly, you don't need to
