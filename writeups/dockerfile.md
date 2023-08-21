@@ -21,12 +21,12 @@ The Dockerfile has two stages, the first one compiles the source code:
   folder that we're going to compile in and change the working directory to
   this folder.
 - `COPY . .` This copies the content of the current directory of the build
-  system into the container. The current dirctory on the build system is
+  system into the container. The current directory on the build system is
   expected to be the folder that this repository was cloned to, so the files
   that are copied are only those from the git repository.
 - `RUN cargo build --release --locked --target=x86_64-unknown-linux-musl` This
   compiles the rust source code into a binary. The command is explained in
-  detail in the [`Makefile`](makefile.md) writeup. This commnand is likely making our temporary
+  detail in the [`Makefile`](makefile.md) writeup. This command is likely making our temporary
 
 The temporary build image is done at this point, the second `FROM` starts a new
 image:
